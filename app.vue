@@ -1,11 +1,12 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <nav class="bg-gray dark:bg-gray-800 shadow-sm">
+  <div class="min-h-screen" :class="route.path !== '/' ? 'bg-gray-50 dark:bg-gray-900' : ''">
+    <nav v-if="route.path !== '/'" class="bg-gray dark:bg-gray-800 shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
           <div class="flex items-center">
-            <NuxtLink to="/" class="text-2xl font-bold text-gray-900 dark:text-white">Jay Jackson</NuxtLink>
+            <NuxtLink to="/home" class="text-2xl font-bold text-gray-900 dark:text-white">Jay Jackson</NuxtLink>
             <div class="hidden md:flex items-center space-x-8 ml-10">
+              <NuxtLink to="/home" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">Home</NuxtLink>
               <NuxtLink to="/blog" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">Blog</NuxtLink>
               <NuxtLink to="/projects" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">Projects</NuxtLink>
               <NuxtLink to="/about" class="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">About</NuxtLink>
@@ -31,13 +32,14 @@
         </div>
       </div>
     </nav>
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <main :class="route.path !== '/' ? 'max-w-7xl mx-auto py-6 sm:px-6 lg:px-8' : ''">
       <NuxtPage />
     </main>
   </div>
 </template>
 
 <script setup>
+const route = useRoute()
 const colorMode = useColorMode()
 
 const toggleTheme = () => {

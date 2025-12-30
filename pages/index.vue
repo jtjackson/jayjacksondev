@@ -1,84 +1,211 @@
 <template>
-    <div class="space-y-16">
-        <!-- Hero Section -->
-        <section class="text-center py-24 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900 dark:to-indigo-900 rounded-2xl">
-            <div class="mb-8">
-                <h1 class="text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    Jay Jackson
-                </h1>
-                <p class="text-2xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-                    Software Engineer. Tinkerer. Continuous Learner.
-                </p>
-            </div>
-            <div class="flex justify-center space-x-6">
-                <NuxtLink to="/projects" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
-                    Projects
-                </NuxtLink>
-                <NuxtLink to="/blog" class="border border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900 px-8 py-3 rounded-lg font-semibold transition-colors">
-                    Blog
-                </NuxtLink>
-                <NuxtLink to="/about" class="border border-blue-600 text-blue-600 dark:text-blue-400 dark:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900 px-8 py-3 rounded-lg font-semibold transition-colors">
-                    About
-                </NuxtLink>
-            </div>
-        </section>
+  <div class="terminal-container">
+    <div class="terminal">
+      <div class="terminal-content">
+        <div v-for="(line, index) in displayedLines" :key="index" class="terminal-line">
+          <span v-html="line"></span>
+        </div>
 
-        <!-- Currently Section -->
-        <section class="py-16">
-            <div class="text-center mb-12">
-                <h2 class="text-4xl font-bold mb-4 text-gray-900 dark:text-white">Currently</h2>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                    <Icon name="mdi:account-group" class="w-10 h-10 text-blue-600 dark:text-blue-400 mb-3" />
-                    <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Leading CNCF Sign Language Glossary</h3>
-                    <p class="text-gray-600 dark:text-gray-300 text-sm">Creating ASL signs for cloud native terms</p>
-                </div>
-
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                    <Icon name="mdi:cloud-outline" class="w-10 h-10 text-green-600 dark:text-green-400 mb-3" />
-                    <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Exploring eBPF & Kubernetes</h3>
-                    <p class="text-gray-600 dark:text-gray-300 text-sm">Following closely and working to incorporate into projects</p>
-                </div>
-
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                    <Icon name="mdi:code" class="w-10 h-10 text-purple-600 dark:text-purple-400 mb-3" />
-                    <h3 class="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Full-Stack Contracting</h3>
-                    <p class="text-gray-600 dark:text-gray-300 text-sm">Working with Deaf-owned dev firm on EdTech projects</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Featured Content -->
-        <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                <div class="flex items-center mb-6">
-                    <Icon name="mdi:newspaper-variant" class="w-8 h-8 text-blue-600 dark:text-blue-400 mr-3" />
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Latest Blog Posts</h2>
-                </div>
-                <div class="space-y-4">
-                    <p class="text-gray-600 dark:text-gray-300">Coming soon... Stay tuned for insights on software engineering, accessibility, and tech innovation.</p>
-                    <NuxtLink to="/blog" class="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold">
-                        View All Posts
-                        <Icon name="mdi:arrow-right" class="w-4 h-4 ml-1" />
-                    </NuxtLink>
-                </div>
-            </div>
-
-            <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow">
-                <div class="flex items-center mb-6">
-                    <Icon name="mdi:flask" class="w-8 h-8 text-green-600 dark:text-green-400 mr-3" />
-                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Project Labs</h2>
-                </div>
-                <div class="space-y-4">
-                    <p class="text-gray-600 dark:text-gray-300">Interactive demos and experiments showcasing modern software technologies.</p>
-                    <NuxtLink to="/projects" class="inline-flex items-center text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 font-semibold">
-                        Explore Projects
-                        <Icon name="mdi:arrow-right" class="w-4 h-4 ml-1" />
-                    </NuxtLink>
-                </div>
-            </div>
-        </section>
+        <div v-if="showPrompt" class="terminal-line prompt-line">
+          <span class="prompt">></span>
+          <input
+            ref="inputRef"
+            v-model="userInput"
+            @keydown.enter="handleEnter"
+            class="terminal-input"
+            :disabled="!acceptingInput"
+            autofocus
+          />
+          <span v-if="acceptingInput" class="cursor">_</span>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
+
+<script setup>
+import { ref, onMounted, nextTick } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const displayedLines = ref([])
+const showPrompt = ref(false)
+const userInput = ref('')
+const acceptingInput = ref(false)
+const inputRef = ref(null)
+
+const lines = [
+  'Initializing connection...',
+  '',
+  'Wake up, Neo...',
+  '',
+  'The Matrix has you.',
+  '',
+  'Follow the white rabbit.'
+]
+
+const typeWriter = async (text, lineIndex) => {
+  let currentText = ''
+  for (let i = 0; i < text.length; i++) {
+    currentText += text[i]
+    displayedLines.value[lineIndex] = currentText
+    await new Promise(resolve => setTimeout(resolve, 50))
+  }
+}
+
+const handleEnter = async () => {
+  if (!acceptingInput.value || !userInput.value.trim()) return
+
+  acceptingInput.value = false
+  const input = userInput.value
+  userInput.value = ''
+
+  // Show what user typed
+  displayedLines.value.push(`<span class="user-input">> ${input}</span>`)
+
+  await new Promise(resolve => setTimeout(resolve, 500))
+
+  // Response
+  displayedLines.value.push('')
+  const responseIndex = displayedLines.value.length
+  displayedLines.value.push('')
+  await typeWriter('Knock, knock, Neo.', responseIndex)
+
+  await new Promise(resolve => setTimeout(resolve, 1000))
+
+  // Redirect to home
+  router.push('/home')
+}
+
+onMounted(async () => {
+  // Type out each line
+  for (let i = 0; i < lines.length; i++) {
+    const lineIndex = displayedLines.value.length
+    displayedLines.value.push('')
+
+    if (lines[i] === '') {
+      await new Promise(resolve => setTimeout(resolve, 300))
+    } else {
+      await typeWriter(lines[i], lineIndex)
+      await new Promise(resolve => setTimeout(resolve, 500))
+    }
+  }
+
+  // Show prompt
+  await new Promise(resolve => setTimeout(resolve, 1000))
+  showPrompt.value = true
+
+  await nextTick()
+  acceptingInput.value = true
+
+  // Focus input
+  if (inputRef.value) {
+    inputRef.value.focus()
+  }
+})
+</script>
+
+<style scoped>
+.terminal-container {
+  min-height: 100vh;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.terminal {
+  width: 100%;
+  max-width: 800px;
+  background-color: #0d0d0d;
+  border: 2px solid #00ff41;
+  border-radius: 4px;
+  padding: 2rem;
+  box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+}
+
+.terminal-content {
+  color: #00ff41;
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+
+.terminal-line {
+  margin-bottom: 0.5rem;
+  min-height: 1.8rem;
+}
+
+.prompt-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.prompt {
+  color: #00ff41;
+  font-weight: bold;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #00ff41;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.125rem;
+  caret-color: transparent;
+}
+
+.terminal-input:disabled {
+  opacity: 0.5;
+}
+
+.cursor {
+  animation: blink 1s infinite;
+  color: #00ff41;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.user-input {
+  color: #0ff;
+}
+
+/* Matrix rain effect in background */
+.terminal-container::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.05;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      #00ff41 2px,
+      #00ff41 4px
+    );
+  animation: rain 20s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes rain {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
+
+.terminal {
+  position: relative;
+  z-index: 1;
+}
+</style>
