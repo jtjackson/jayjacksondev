@@ -33,7 +33,9 @@
       </div>
     </nav>
     <main :class="route.path !== '/' ? 'max-w-7xl mx-auto py-6 sm:px-6 lg:px-8' : ''">
-      <NuxtPage />
+      <transition name="page" mode="out-in">
+        <NuxtPage />
+      </transition>
     </main>
   </div>
 </template>
@@ -46,3 +48,18 @@ const toggleTheme = () => {
   colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
 }
 </script>
+
+<style>
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 1s ease;
+}
+
+.page-enter-from {
+  opacity: 0;
+}
+
+.page-leave-to {
+  opacity: 0;
+}
+</style>

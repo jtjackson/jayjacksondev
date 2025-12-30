@@ -1,6 +1,6 @@
 <template>
   <div class="terminal-container">
-    <div class="terminal">
+    <div class="terminal" :class="{ 'fade-out': showMatrixRain }">
       <div class="terminal-content">
         <div v-for="(line, index) in displayedLines" :key="index" class="terminal-line">
           <span v-html="line"></span>
@@ -20,6 +20,13 @@
         </div>
       </div>
     </div>
+
+    <!-- Matrix Rain Overlay -->
+    <canvas
+      v-if="showMatrixRain"
+      ref="matrixCanvas"
+      class="matrix-rain"
+    ></canvas>
   </div>
 </template>
 
@@ -33,6 +40,8 @@ const showPrompt = ref(false)
 const userInput = ref('')
 const acceptingInput = ref(false)
 const inputRef = ref(null)
+const showMatrixRain = ref(false)
+const matrixCanvas = ref(null)
 
 const lines = [
   'Initializing connection...',
@@ -51,6 +60,63 @@ const typeWriter = async (text, lineIndex) => {
     displayedLines.value[lineIndex] = currentText
     await new Promise(resolve => setTimeout(resolve, 50))
   }
+}
+
+const startMatrixRain = () => {
+  showMatrixRain.value = true
+
+  nextTick(() => {
+    const canvas = matrixCanvas.value
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d')
+    canvas.width = window.innerWidth
+    canvas.height = window.innerHeight
+
+    const matrix = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789@#$%^&*()*&^%+-/~{[|`]}'
+    const fontSize = 16
+    const columns = canvas.width / fontSize
+    const drops = []
+
+    for (let i = 0; i < columns; i++) {
+      drops[i] = 1
+    }
+
+    let animationId
+
+    const draw = () => {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.08)'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+      ctx.fillStyle = '#00ff41'
+      ctx.font = fontSize + 'px monospace'
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = matrix[Math.floor(Math.random() * matrix.length)]
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize)
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0
+        }
+
+        drops[i] += 0.5 // Slower falling speed
+      }
+
+      animationId = requestAnimationFrame(draw)
+    }
+
+    draw()
+
+    // After 4 seconds, start fade out, then navigate
+    setTimeout(() => {
+      canvas.classList.add('fade-out-rain')
+
+      setTimeout(() => {
+        cancelAnimationFrame(animationId)
+        router.push('/home')
+      }, 1500) // Wait for fade out to complete
+    }, 4000)
+  })
 }
 
 const handleEnter = async () => {
@@ -73,8 +139,8 @@ const handleEnter = async () => {
 
   await new Promise(resolve => setTimeout(resolve, 1000))
 
-  // Redirect to home
-  router.push('/home')
+  // Start Matrix rain transition
+  startMatrixRain()
 }
 
 onMounted(async () => {
@@ -207,5 +273,30 @@ onMounted(async () => {
 .terminal {
   position: relative;
   z-index: 1;
+  transition: opacity 2s ease-out;
+}
+
+.terminal.fade-out {
+  opacity: 0;
+}
+
+.matrix-rain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  animation: fadeIn 1.5s ease-in;
+  transition: opacity 1.5s ease-out;
+}
+
+.matrix-rain.fade-out-rain {
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 </style>
