@@ -1,56 +1,69 @@
 # jayjackson.dev
 
-My personal website - built with Nuxt 3, showcasing my work and story.
+My personal website - built with Astro 5, showcasing my work and story.
 
-## 📁 Site Structure
+## Tech Stack
+
+- **Framework**: [Astro 5](https://astro.build/) with static output
+- **UI Components**: [Vue 3](https://vuejs.org/) islands for interactivity
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) with Typography plugin
+- **Content**: Markdown with [MDX](https://mdxjs.com/) support via Content Collections
+- **SEO**: Sitemap, RSS feed, OpenGraph/Twitter meta tags
+
+## Commands
+
+```bash
+npm install      # Install dependencies
+npm run dev      # Start dev server at localhost:4321
+npm run build    # Build for production to ./dist
+npm run preview  # Preview production build locally
+```
+
+## Site Structure
 
 ```
-/                    # Homepage - Hero, tech stack, what I do
+/                    # Matrix terminal landing page
+/home                # Homepage with navigation
 /about               # My story, experience, interests
-/projects            # Project labs with filtering
-/blog                # Blog posts with search/categories  
+/projects            # Project showcase with filtering
+/blog                # Blog posts with search/categories
 /contact             # Contact form and social links
 /resume              # Professional resume
+/rss.xml             # RSS feed
+/sitemap-index.xml   # Sitemap
 ```
 
-## 📄 Page Content
+## Project Structure
 
-### **Homepage**
-- Hero: Name, title, call-to-action buttons
-- Tech Stack: Languages, Frameworks, Cloud (3 columns)
-- What I Do: Software Engineering, Accessibility Advocacy, Continuous Learning
-- Featured: Latest blog posts and Project Labs cards
+```
+src/
+├── components/      # Vue islands (BlogList, ProjectsList, ContactForm)
+├── content/
+│   └── blog/        # Markdown blog posts
+├── layouts/         # Astro layouts
+├── pages/           # Astro pages (routes)
+└── styles/          # Global styles
+public/              # Static assets
+```
 
-### **About Page**
-- My Story: Personal narrative from Commodore to present
-- Experience & Skills: Core technologies and areas of focus
-- Sidebar: Personal interests, community involvement, contact CTA
+## Blog
 
-### **Projects Page**
-- Category filtering: All, Web Apps, Tools, Experiments, Open Source
-- Project cards: Title, description, tech stack, demo/GitHub links
-- Status indicators: Live, Coming Soon
+Blog posts are written in Markdown and stored in `src/content/blog/`. Each post requires frontmatter:
 
-### **Blog Page**
-- Category filtering and search
-- Post cards: Title, excerpt, category, read time, tags
-- Newsletter signup section
-
-### **Contact Page**
-- Contact form: Name, email, subject, message
-- Social links: GitHub, LinkedIn, Bluesky
-- Availability status and response time info
-
-### **Resume Page**
-- Professional resume content
-
-## 🎨 Design Notes
-
-- **Color scheme**: Blue-to-purple gradients, consistent across pages
-- **Dark mode**: Full support with automatic switching
-- **Responsive**: Mobile-first design, works on all devices
-- **Accessibility**: WCAG compliant, keyboard navigation, screen reader support
-
+```yaml
 ---
+title: "Post Title"
+description: "Brief description"
+pubDate: 2024-03-01
+category: "Technical"  # Technical, Poetry, Personal, Career, Accessibility
+tags: ["tag1", "tag2"]
+readTime: 5
+---
+```
 
-*For technical details, see [TECHNICAL.md](./TECHNICAL.md)*
+## Design
+
+- **Light/Dark mode**: Toggle with system preference detection
+- **Matrix theme**: Green terminal aesthetic in dark mode
+- **Responsive**: Mobile-first design
+- **Accessible**: WCAG compliant, keyboard navigation, screen reader support
