@@ -1,0 +1,19 @@
+---
+import MatrixTerminal from '../components/MatrixTerminal.vue';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Jay Jackson</title>
+  </head>
+  <body>
+    <!--
+      client:only="vue" - Only render on client (needs browser APIs like localStorage)
+      This is the "island" - only this component gets JavaScript
+    -->
+    <MatrixTerminal client:only="vue" />
+  </body>
+</html>

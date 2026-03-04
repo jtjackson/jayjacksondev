@@ -1,0 +1,67 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BlogList from '../../components/BlogList.vue';
+import { getCollection } from 'astro:content';
+
+const posts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+
+const sortedPosts = posts
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .map(post => ({
+    slug: post.slug,
+    title: post.data.title,
+    description: post.data.description,
+    pubDate: post.data.pubDate.toISOString(),
+    category: post.data.category,
+    tags: post.data.tags,
+    readTime: post.data.readTime,
+  }));
+---
+
+<Layout title="Blog - Jay Jackson" description="Thoughts on web development, accessibility, cloud native technologies, and tech. Articles about Vue.js, Astro, Rust, eBPF, and my experiences in software engineering.">
+  <div class="max-w-4xl mx-auto px-4 py-16 space-y-16">
+    <!-- Hero -->
+    <section class="space-y-4">
+      <h1 class="text-5xl font-bold text-blue-600 dark:text-green-400 dark:drop-shadow-[0_0_20px_rgba(0,255,65,0.3)]">
+        Blog
+      </h1>
+      <p class="text-xl text-gray-700 dark:text-gray-300">
+        Thoughts on software engineering, accessibility, and life
+      </p>
+    </section>
+
+    <!-- Blog List Component -->
+    <BlogList posts={sortedPosts} client:load />
+
+    <!-- Newsletter -->
+    <section class="pt-8 border-t border-gray-200 dark:border-green-500/20 space-y-6">
+      <h2 class="text-3xl font-bold text-gray-900 dark:text-white">Stay Updated</h2>
+      <p class="text-lg text-gray-700 dark:text-gray-300">
+        Get notified when I publish new posts about software engineering, accessibility, and tech insights.
+      </p>
+      <form class="space-y-4">
+        <div class="flex flex-col sm:flex-row gap-4 max-w-md">
+          <div class="flex-1">
+            <label for="newsletter-email" class="sr-only">Email address</label>
+            <input
+              id="newsletter-email"
+              type="email"
+              autocomplete="email"
+              placeholder="your@email.com"
+              required
+              class="w-full px-4 py-3 bg-transparent border-b border-gray-300 dark:border-green-500/30 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-blue-600 dark:focus:border-green-500 transition-colors"
+            />
+          </div>
+          <button type="submit" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-green-500 dark:hover:bg-green-600 text-white dark:text-black rounded-lg font-semibold transition-colors">
+            Subscribe
+          </button>
+        </div>
+        <p class="text-sm text-gray-500 dark:text-gray-400">
+          No spam, unsubscribe anytime.
+        </p>
+      </form>
+    </section>
+  </div>
+</Layout>

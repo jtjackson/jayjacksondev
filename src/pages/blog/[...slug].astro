@@ -1,0 +1,83 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: post,
+  }));
+}
+
+const post = Astro.props;
+const { Content } = await post.render();
+
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+---
+
+<Layout title={`${post.data.title} - Jay Jackson`} description={post.data.description}>
+  <article class="max-w-4xl mx-auto px-4 py-16">
+    <!-- Post Header -->
+    <header class="space-y-6 mb-12">
+      <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+        <time datetime={post.data.pubDate.toISOString()}>
+          {formatDate(post.data.pubDate)}
+        </time>
+        {post.data.readTime && (
+          <>
+            <span>•</span>
+            <span>{post.data.readTime} min read</span>
+          </>
+        )}
+        <span>•</span>
+        <span class="text-blue-600 dark:text-green-400">{post.data.category}</span>
+      </div>
+
+      <h1 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white leading-tight">
+        {post.data.title}
+      </h1>
+
+      <p class="text-xl text-gray-600 dark:text-gray-400">
+        {post.data.description}
+      </p>
+
+      <div class="flex flex-wrap gap-2">
+        {post.data.tags.map((tag: string) => (
+          <span class="text-sm text-gray-600 dark:text-gray-400">
+            #{tag}
+          </span>
+        ))}
+      </div>
+    </header>
+
+    <!-- Post Content -->
+    <div class="prose prose-lg dark:prose-invert max-w-none
+                prose-headings:text-gray-900 dark:prose-headings:text-white
+                prose-a:text-blue-600 dark:prose-a:text-green-400
+                prose-a:no-underline hover:prose-a:underline
+                prose-code:text-blue-600 dark:prose-code:text-green-400
+                prose-code:bg-gray-100 dark:prose-code:bg-gray-800
+                prose-code:px-1 prose-code:py-0.5 prose-code:rounded
+                prose-pre:bg-gray-900 dark:prose-pre:bg-gray-950
+                prose-blockquote:border-blue-600 dark:prose-blockquote:border-green-400">
+      <Content />
+    </div>
+
+    <!-- Post Footer -->
+    <footer class="mt-16 pt-8 border-t border-gray-200 dark:border-green-500/20">
+      <a
+        href="/blog"
+        class="inline-flex items-center text-blue-600 dark:text-green-400 hover:text-blue-700 dark:hover:text-green-300 font-semibold transition-colors"
+      >
+        ← Back to all posts
+      </a>
+    </footer>
+  </article>
+</Layout>

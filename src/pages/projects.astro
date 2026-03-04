@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProjectsList from '../components/ProjectsList.vue';
+---
+
+<Layout title="Projects - Jay Jackson" description="Things I've built and experiments I'm working on. Web apps, open source contributions, tools, and experimental projects in cloud native technologies and accessibility.">
+  <div class="max-w-4xl mx-auto px-4 py-16 space-y-16">
+    <!-- Hero -->
+    <section class="space-y-4">
+      <h1 class="text-5xl font-bold text-blue-600 dark:text-green-400 dark:drop-shadow-[0_0_20px_rgba(0,255,65,0.3)]">
+        Projects
+      </h1>
+      <p class="text-xl text-gray-700 dark:text-gray-300">
+        Things I've built and experiments I'm working on
+      </p>
+    </section>
+
+    <!-- Projects List Component -->
+    <ProjectsList client:load />
+
+    <!-- More Projects -->
+    <section class="pt-8 border-t border-gray-200 dark:border-green-500/20 space-y-6">
+      <h2 class="text-3xl font-bold text-gray-900 dark:text-white">More Projects Coming Soon</h2>
+      <p class="text-lg text-gray-700 dark:text-gray-300">
+        I'm constantly working on new projects and experiments. Check back regularly for updates,
+        or follow me on social media to stay in the loop.
+      </p>
+      <div class="flex gap-4">
+        <a
+          href="https://github.com/jtjackson"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Follow me on GitHub (opens in new tab)"
+          class="inline-flex items-center text-blue-600 dark:text-green-400 hover:text-blue-700 dark:hover:text-green-300 font-semibold transition-colors"
+        >
+          Follow on GitHub →
+        </a>
+        <a
+          href="/blog"
+          class="inline-flex items-center text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-green-400 font-semibold transition-colors"
+        >
+          Read My Blog →
+        </a>
+      </div>
+    </section>
+  </div>
+</Layout>
