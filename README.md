@@ -22,8 +22,8 @@ npm run preview  # Preview production build locally
 ## Site Structure
 
 ```
-/                    # Matrix terminal landing page
-/home                # Homepage with navigation
+/                    # Homepage with navigation
+/home                # Legacy URL, redirects to /
 /about               # My story, experience, interests
 /projects            # Project showcase with filtering
 /blog                # Blog posts with search/categories

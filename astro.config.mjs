@@ -11,7 +11,8 @@ export default defineConfig({
     tailwind(),
     vue(),
     mdx(),
-    sitemap()
+    // /home is a redirect stub to `/`; keep it out of the sitemap.
+    sitemap({ filter: (page) => !page.endsWith('/home/') && !page.endsWith('/home') })
   ],
   output: 'static'
 });

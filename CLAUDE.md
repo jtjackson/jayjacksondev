@@ -30,7 +30,6 @@ There is no lint or test script configured.
 
 ### Astro islands
 Pages are `.astro` (static). Interactivity is isolated to Vue components hydrated with client directives:
-- `client:only="vue"` — Matrix terminal (needs browser APIs / canvas), renders client-side only
 - `client:load` — `ProjectsList`, `BlogList`, `ContactForm`
 
 Data flows **from Astro to Vue via props at build time**. Example: `src/pages/blog/index.astro` calls `getCollection('blog')`, sorts, and passes `posts` into `<BlogList posts={...} client:load />`. Keep data fetching in the `.astro` frontmatter; Vue components are presentation/interaction only.
@@ -38,8 +37,8 @@ Data flows **from Astro to Vue via props at build time**. Example: `src/pages/bl
 ### Routes (`src/pages/`)
 | Route | File | Notes |
 |-------|------|-------|
-| `/` | `index.astro` | Matrix terminal landing (Vue, client-only); minimal bespoke `<head>`, does **not** use `Layout.astro` |
-| `/home` | `home.astro` | Actual homepage / intro |
+| `/` | `index.astro` | Homepage / intro |
+| `/home` | `home.astro` | Legacy URL; redirect stub to `/` (meta refresh + `location.replace`, `noindex`), excluded from the sitemap. Does **not** use `Layout.astro` |
 | `/about` | `about.astro` | Story, experience, interests |
 | `/projects` | `projects.astro` | Renders `ProjectsList` |
 | `/blog` | `blog/index.astro` | Renders `BlogList` with sorted, non-draft posts |
@@ -50,14 +49,14 @@ Data flows **from Astro to Vue via props at build time**. Example: `src/pages/bl
 | `/sitemap-index.xml` | generated | via `@astrojs/sitemap` |
 
 ### Components (`src/components/`)
-- `MatrixTerminal.vue` — typewriter "Wake up, Neo…" intro that transitions into animated canvas Matrix rain
+- `MatrixTerminal.vue` — **disabled / unreferenced.** Typewriter "Wake up, Neo…" intro that transitioned into canvas Matrix rain, and used to be the `/` entry point. Kept on disk only; no page imports it. To restore, render it with `client:only="vue"` from a page of its own.
 - `BlogList.vue` — receives `posts` prop; client-side category filter + search
 - `ProjectsList.vue` — **projects are a hardcoded array inside the component** (not a content collection); category filter
 - `ContactForm.vue` — **the submit is currently a simulated no-op** (`setTimeout`, no real backend). Wiring it to a real endpoint is a known TODO.
 - `ThemeToggle.astro` — dark/light toggle
 
 ### Layout & SEO
-`src/layouts/Layout.astro` is the shared shell for all pages except `/`. It centralizes canonical URL, OpenGraph/Twitter meta, per-page OG image, optional `article:published_time`, the RSS `<link>`, and an accessibility skip-link. Props: `title`, `description`, `showNav`, `image`, `type`, `publishedTime`. When adding a page, render it through `Layout` and pass a `title`/`description`.
+`src/layouts/Layout.astro` is the shared shell for all pages except the `/home` redirect stub. It centralizes canonical URL, OpenGraph/Twitter meta, per-page OG image, optional `article:published_time`, the RSS `<link>`, and an accessibility skip-link. Props: `title`, `description`, `showNav`, `image`, `type`, `publishedTime`. When adding a page, render it through `Layout` and pass a `title`/`description`.
 
 ## Blog Content
 
